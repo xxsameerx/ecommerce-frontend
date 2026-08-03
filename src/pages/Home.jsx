@@ -1,68 +1,128 @@
-import { useEffect, useState } from "react";
-import api from "../api/axiosConfig";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
+import api from "../api/axiosConfig";
+
+function TiltCard({ game }) {
+  const cardRef = useRef(null);
+  const [style, setStyle] = useState({});
+
+  const handleMouseMove = (e) => {
+    const card = cardRef.current;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const rotateX = ((y / rect.height) - 0.5) * -14;
+    const rotateY = ((x / rect.width) - 0.5) * 14;
+    setStyle({
+      transform: `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04,1.04,1.04)`,
+      transition: "transform 0.05s linear"
+    });
+  };
+
+  const resetStyle = () => {
+    setStyle({ transform: "perspective(800px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)", transition: "transform 0.4s ease" });
+  };
+
+  return (
+    <Link to={`/games/${game.gameId}`} style={{ textDecoration: "none" }}>
+      <div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={resetStyle}
+        style={{
+          ...style,
+          width: "220px",
+          borderRadius: "14px",
+          overflow: "hidden",
+          backgroundColor: "var(--surface)",
+          border: "1px solid var(--border)",
+          boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
+          cursor: "pointer"
+        }}
+      >
+        <img src={game.imageUrl} alt={game.title} style={{ width: "100%", height: "280px", objectFit: "cover" }} />
+        <div style={{ padding: "12px" }}>
+          <h4 style={{ color: "var(--text-primary)", fontSize: "15px", marginBottom: "6px" }}>{game.title}</h4>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ color: "var(--accent-green)", fontWeight: "bold" }}>
+              ₹{game.discountPrice || game.price}
+            </span>
+            <span style={{ color: "#facc15", fontSize: "13px" }}>★ {game.rating}</span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
 
 export default function Home() {
   const [games, setGames] = useState([]);
 
   useEffect(() => {
-    api.get("/games").then((res) => setGames(res.data)).catch(() => setGames([]));
+    api.get("/games").then((res) => setGames(res.data.slice(0, 12))).catch(() => setGames([]));
   }, []);
 
   return (
-    <div>
+    <div style={{ backgroundColor: "#0D0D0D", minHeight: "100vh" }}>
+
       <section style={{
+        position: "relative",
+        height: "80vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
         textAlign: "center",
-        padding: "80px 20px",
-        background: "linear-gradient(135deg, #0D0D0D, #1A1A1A)",
-        borderBottom: "1px solid var(--border)"
+        overflow: "hidden",
+        background: "radial-gradient(circle at 50% 30%, rgba(34,197,94,0.15), transparent 60%), linear-gradient(180deg, #0D0D0D, #000)"
       }}>
-        <h1 style={{ fontSize: "48px", marginBottom: "16px" }}>
-          Level Up Your <span style={{ color: "var(--accent-green)" }}>Game Library</span>
+        <h1 style={{
+          fontSize: "64px", fontWeight: "900", color: "#fff",
+          marginBottom: "16px", letterSpacing: "-1px",
+          textShadow: "0 0 40px rgba(34,197,94,0.4)"
+        }}>
+          Play Beyond Limits
         </h1>
-        <p style={{ color: "var(--text-muted)", fontSize: "18px", marginBottom: "24px" }}>
-          Instant digital keys. Unbeatable prices. Zero waiting.
+        <p style={{ color: "var(--text-muted)", fontSize: "18px", maxWidth: "600px", marginBottom: "32px" }}>
+          Thousands of games. Instant digital delivery. Unbeatable prices.
+          Your next adventure starts here.
         </p>
         <Link to="/store" style={{
-          backgroundColor: "var(--accent-green)",
-          color: "#000",
-          padding: "14px 32px",
-          borderRadius: "6px",
-          fontWeight: "bold",
-          display: "inline-block"
+          backgroundColor: "var(--accent-green)", color: "#000",
+          padding: "16px 40px", borderRadius: "10px", fontWeight: "800",
+          fontSize: "16px", textDecoration: "none",
+          boxShadow: "0 0 30px rgba(34,197,94,0.5)"
         }}>
-          Browse Store
+          Explore the Store
         </Link>
       </section>
 
       <section style={{ padding: "60px 40px" }}>
-        <h2 style={{ marginBottom: "24px" }}>Featured Games</h2>
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-          gap: "24px"
-        }}>
-          {games.map((game) => (
-            <Link to={`/games/${game.gameId}`} key={game.gameId} style={{
-              backgroundColor: "var(--surface)",
-              border: "1px solid var(--border)",
-              borderRadius: "10px",
-              overflow: "hidden",
-              display: "block"
-            }}>
-              <img src={game.imageUrl} alt={game.title} style={{ width: "100%", height: "260px", objectFit: "cover" }} />
-              <div style={{ padding: "16px" }}>
-                <h3 style={{ fontSize: "16px", marginBottom: "8px", color: "var(--text-primary)" }}>{game.title}</h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "13px", marginBottom: "12px" }}>{game.genre} · {game.platform}</p>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ color: "var(--accent-green)", fontWeight: "bold" }}>${game.discountPrice || game.price}</span>
-                  <span style={{ color: "var(--accent-blue)" }}>★ {game.rating}</span>
-                </div>
-              </div>
-            </Link>
+        <h2 style={{ color: "#fff", fontSize: "28px", marginBottom: "24px" }}>🔥 Trending Now</h2>
+        <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+          {games.map((g) => <TiltCard key={g.gameId} game={g} />)}
+        </div>
+      </section>
+
+      <section style={{
+        padding: "80px 40px", textAlign: "center",
+        background: "linear-gradient(180deg, #0D0D0D, #111)"
+      }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: "60px", flexWrap: "wrap" }}>
+          {[
+            { label: "Games Available", value: "1,000+" },
+            { label: "Happy Gamers", value: "50K+" },
+            { label: "Instant Delivery", value: "100%" },
+            { label: "Support", value: "24/7" },
+          ].map((stat) => (
+            <div key={stat.label}>
+              <h3 style={{ color: "var(--accent-green)", fontSize: "36px", fontWeight: "900" }}>{stat.value}</h3>
+              <p style={{ color: "var(--text-muted)" }}>{stat.label}</p>
+            </div>
           ))}
         </div>
       </section>
+
     </div>
   );
 }

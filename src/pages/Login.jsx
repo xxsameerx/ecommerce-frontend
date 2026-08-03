@@ -2,10 +2,10 @@ import { useState } from "react";
 import api from "../api/axiosConfig";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const [form, setForm] = useState({ emailOrMobile: "", password: "" });
-  const [message, setMessage] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,10 +17,11 @@ export default function Login() {
     try {
       const res = await api.post("/auth/login", form);
       login(res.data);
+      toast.success("Login successful!");
       const redirectTo = location.state?.from || "/dashboard";
       navigate(redirectTo);
     } catch (err) {
-      setMessage(typeof err.response?.data === "string" ? err.response.data : "Login failed");
+      toast.error(typeof err.response?.data === "string" ? err.response.data : "Login failed");
     }
   };
 
@@ -36,7 +37,6 @@ export default function Login() {
             onChange={handleChange} required />
           <button className="auth-button" type="submit">Login</button>
         </form>
-        {message && <p className="auth-message">{message}</p>}
         <p className="auth-footer">
           <Link to="/forgot-password">Forgot Password?</Link>
         </p>

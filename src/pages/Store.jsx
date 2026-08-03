@@ -72,11 +72,11 @@ export default function Store() {
                 <span>
                   {game.discountPrice ? (
                     <>
-                      <span style={{ color: "var(--text-muted)", textDecoration: "line-through", marginRight: "6px", fontSize: "13px" }}>${game.price}</span>
-                      <span style={{ color: "var(--accent-green)", fontWeight: "bold" }}>${game.discountPrice}</span>
+                      <span style={{ color: "var(--text-muted)", textDecoration: "line-through", marginRight: "6px", fontSize: "13px" }}>₹{game.price}</span>
+                      <span style={{ color: "var(--accent-green)", fontWeight: "bold" }}>₹{game.discountPrice}</span>
                     </>
                   ) : (
-                    <span style={{ color: "var(--accent-green)", fontWeight: "bold" }}>${game.price}</span>
+                    <span style={{ color: "var(--accent-green)", fontWeight: "bold" }}>₹{game.price}</span>
                   )}
                 </span>
                 <span style={{ color: "var(--accent-blue)" }}>★ {game.rating}</span>
