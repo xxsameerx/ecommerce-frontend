@@ -20,7 +20,7 @@ export default function CartPage() {
         }
       });
     }
-  }, [cart]);
+  }, [cart,gameDetails]);
 
   if (!cart || !cart.items || cart.items.length === 0) {
     return <p style={{ padding: "40px" }}>Your cart is empty.</p>;
