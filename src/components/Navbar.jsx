@@ -3,6 +3,21 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 
+function Cube3D() {
+  return (
+    <div className="cube-scene">
+      <div className="cube">
+        <div className="cube-face cube-front" />
+        <div className="cube-face cube-back" />
+        <div className="cube-face cube-right" />
+        <div className="cube-face cube-left" />
+        <div className="cube-face cube-top" />
+        <div className="cube-face cube-bottom" />
+      </div>
+    </div>
+  );
+}
+
 export default function Navbar() {
   const { token, user, logout } = useAuth();
   const { cart, fetchCart } = useCart();
@@ -40,8 +55,9 @@ export default function Navbar() {
       <Link to="/" style={{
         fontSize: "24px", fontWeight: "900", letterSpacing: "1px",
         color: "var(--accent-green)", textDecoration: "none",
-        display: "flex", alignItems: "center", gap: "8px"
+        display: "flex", alignItems: "center", gap: "14px"
       }}>
+        <Cube3D />
         <span style={{
           background: "linear-gradient(135deg, #22c55e, #16a34a)",
           WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent"
