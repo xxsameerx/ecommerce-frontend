@@ -29,20 +29,15 @@ function TiltCard({ game }) {
         ref={cardRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={resetStyle}
+        className="game-card"
         style={{
           ...style,
           width: "220px",
-          borderRadius: "14px",
-          overflow: "hidden",
-          backgroundColor: "var(--surface)",
-          border: "1px solid var(--border)",
-          boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
-          cursor: "pointer"
         }}
       >
-        <img src={game.imageUrl} alt={game.title} style={{ width: "100%", height: "280px", objectFit: "cover" }} />
-        <div style={{ padding: "12px" }}>
-          <h4 style={{ color: "var(--text-primary)", fontSize: "15px", marginBottom: "6px" }}>{game.title}</h4>
+        <img src={game.imageUrl} alt={game.title} className="game-card-img" style={{ height: "280px" }} />
+        <div className="game-card-body">
+          <h4 className="game-card-title" style={{ fontSize: "15px" }}>{game.title}</h4>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <span style={{ color: "var(--accent-green)", fontWeight: "bold" }}>
               ₹{game.discountPrice || game.price}

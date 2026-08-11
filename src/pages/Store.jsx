@@ -55,35 +55,28 @@ export default function Store() {
         gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
         gap: "24px"
       }}>
-        {games.map((game) => (
-          <Link to={`/games/${game.gameId}`} key={game.gameId} style={{
-            backgroundColor: "var(--surface)",
-            border: "1px solid var(--border)",
-            borderRadius: "10px",
-            overflow: "hidden",
-            display: "block",
-            transition: "transform 0.15s"
-          }}>
-            <img src={game.imageUrl} alt={game.title} style={{ width: "100%", height: "260px", objectFit: "cover" }} />
-            <div style={{ padding: "16px" }}>
-              <h3 style={{ fontSize: "16px", marginBottom: "8px", color: "var(--text-primary)" }}>{game.title}</h3>
-              <p style={{ color: "var(--text-muted)", fontSize: "13px", marginBottom: "12px" }}>{game.genre} · {game.platform}</p>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span>
-                  {game.discountPrice ? (
-                    <>
-                      <span style={{ color: "var(--text-muted)", textDecoration: "line-through", marginRight: "6px", fontSize: "13px" }}>₹{game.price}</span>
-                      <span style={{ color: "var(--accent-green)", fontWeight: "bold" }}>₹{game.discountPrice}</span>
-                    </>
-                  ) : (
-                    <span style={{ color: "var(--accent-green)", fontWeight: "bold" }}>₹{game.price}</span>
-                  )}
-                </span>
-                <span style={{ color: "var(--accent-blue)" }}>★ {game.rating}</span>
-              </div>
-            </div>
-          </Link>
-        ))}
+{games.map((game) => (
+  <Link to={`/games/${game.gameId}`} key={game.gameId} className="game-card">
+    <img src={game.imageUrl} alt={game.title} className="game-card-img" />
+    <div className="game-card-body">
+      <h3 className="game-card-title">{game.title}</h3>
+      <p style={{ color: "var(--text-muted)", fontSize: "13px", marginBottom: "12px" }}>{game.genre} · {game.platform}</p>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span>
+          {game.discountPrice ? (
+            <>
+              <span style={{ color: "var(--text-muted)", textDecoration: "line-through", marginRight: "6px", fontSize: "13px" }}>₹{game.price}</span>
+              <span style={{ color: "var(--accent-green)", fontWeight: "bold" }}>₹{game.discountPrice}</span>
+            </>
+          ) : (
+            <span style={{ color: "var(--accent-green)", fontWeight: "bold" }}>₹{game.price}</span>
+          )}
+        </span>
+        <span style={{ color: "var(--accent-blue)" }}>★ {game.rating}</span>
+      </div>
+    </div>
+  </Link>
+))}
       </div>
     </div>
   );
