@@ -3,6 +3,7 @@ import api from "../api/axiosConfig";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import PasswordInput from "../components/PasswordInput";
 
 export default function AdminLogin() {
   const [form, setForm] = useState({ emailOrMobile: "", password: "" });
@@ -26,13 +27,22 @@ export default function AdminLogin() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2 className="auth-title">Admin Login</h2>
+        <h2 className="auth-title">Admin Portal</h2>
         <p className="auth-subtitle">Restricted access — authorized personnel only</p>
         <form onSubmit={handleSubmit}>
-          <input className="auth-input" name="emailOrMobile" placeholder="Admin Email"
-            onChange={handleChange} required />
-          <input className="auth-input" name="password" type="password" placeholder="Password"
-            onChange={handleChange} required />
+          <input
+            className="auth-input"
+            name="emailOrMobile"
+            placeholder="Admin Email or Mobile"
+            onChange={handleChange}
+            required
+          />
+          <PasswordInput
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            placeholder="Admin Password"
+          />
           <button className="auth-button" type="submit">Login as Admin</button>
         </form>
         <p className="auth-footer">

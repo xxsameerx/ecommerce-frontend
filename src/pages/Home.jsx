@@ -25,16 +25,7 @@ function TiltCard({ game }) {
 
   return (
     <Link to={`/games/${game.gameId}`} style={{ textDecoration: "none" }}>
-      <div
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={resetStyle}
-        className="game-card"
-        style={{
-          ...style,
-          width: "220px",
-        }}
-      >
+      <div ref={cardRef} onMouseMove={handleMouseMove} onMouseLeave={resetStyle} className="game-card" style={{ ...style, width: "220px" }}>
         <img src={game.imageUrl} alt={game.title} className="game-card-img" style={{ height: "280px" }} />
         <div className="game-card-body">
           <h4 className="game-card-title" style={{ fontSize: "15px" }}>{game.title}</h4>
@@ -52,30 +43,33 @@ function TiltCard({ game }) {
 
 export default function Home() {
   const [games, setGames] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get("/games").then((res) => setGames(res.data.slice(0, 12))).catch(() => setGames([]));
+    api.get("/games?page=0&size=12")
+      .then((res) => setGames(res.data.content))
+      .catch(() => setGames([]))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
     <div style={{ backgroundColor: "#0D0D0D", minHeight: "100vh" }}>
 
       <section style={{
-        position: "relative",
-        height: "80vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        overflow: "hidden",
+        position: "relative", height: "80vh", display: "flex", flexDirection: "column",
+        justifyContent: "center", alignItems: "center", textAlign: "center", overflow: "hidden",
         background: "radial-gradient(circle at 50% 30%, rgba(34,197,94,0.15), transparent 60%), linear-gradient(180deg, #0D0D0D, #000)"
       }}>
-        <h1 style={{
-          fontSize: "64px", fontWeight: "900", color: "#fff",
-          marginBottom: "16px", letterSpacing: "-1px",
-          textShadow: "0 0 40px rgba(34,197,94,0.4)"
-        }}>
+        <div style={{ position: "absolute", top: "24px", right: "40px" }}>
+          <Link to="/admin-login" style={{
+            color: "var(--text-muted)", fontSize: "13px", textDecoration: "none",
+            border: "1px solid var(--border)", padding: "8px 16px", borderRadius: "8px"
+          }}>
+            Admin Login
+          </Link>
+        </div>
+
+        <h1 style={{ fontSize: "64px", fontWeight: "900", color: "#fff", marginBottom: "16px", letterSpacing: "-1px", textShadow: "0 0 40px rgba(34,197,94,0.4)" }}>
           Play Beyond Limits
         </h1>
         <p style={{ color: "var(--text-muted)", fontSize: "18px", maxWidth: "600px", marginBottom: "32px" }}>
@@ -83,10 +77,8 @@ export default function Home() {
           Your next adventure starts here.
         </p>
         <Link to="/store" style={{
-          backgroundColor: "var(--accent-green)", color: "#000",
-          padding: "16px 40px", borderRadius: "10px", fontWeight: "800",
-          fontSize: "16px", textDecoration: "none",
-          boxShadow: "0 0 30px rgba(34,197,94,0.5)"
+          backgroundColor: "var(--accent-green)", color: "#000", padding: "16px 40px", borderRadius: "10px",
+          fontWeight: "800", fontSize: "16px", textDecoration: "none", boxShadow: "0 0 30px rgba(34,197,94,0.5)"
         }}>
           Explore the Store
         </Link>
@@ -94,15 +86,16 @@ export default function Home() {
 
       <section style={{ padding: "60px 40px" }}>
         <h2 style={{ color: "#fff", fontSize: "28px", marginBottom: "24px" }}>🔥 Trending Now</h2>
-        <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-          {games.map((g) => <TiltCard key={g.gameId} game={g} />)}
-        </div>
+        {loading ? (
+          <p style={{ color: "var(--text-muted)" }}>Loading games...</p>
+        ) : (
+          <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+            {games.map((g) => <TiltCard key={g.gameId} game={g} />)}
+          </div>
+        )}
       </section>
 
-      <section style={{
-        padding: "80px 40px", textAlign: "center",
-        background: "linear-gradient(180deg, #0D0D0D, #111)"
-      }}>
+      <section style={{ padding: "80px 40px", textAlign: "center", background: "linear-gradient(180deg, #0D0D0D, #111)" }}>
         <div style={{ display: "flex", justifyContent: "center", gap: "60px", flexWrap: "wrap" }}>
           {[
             { label: "Games Available", value: "1,000+" },
